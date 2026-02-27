@@ -1,0 +1,33 @@
+-- Migration for Admission, Ward, and Bed tables
+
+-- Create Ward table
+CREATE TABLE Ward (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    capacity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Create Bed table
+CREATE TABLE Bed (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    ward_id INT,
+    bed_number VARCHAR(255) NOT NULL,
+    status ENUM('available', 'occupied') DEFAULT 'available',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (ward_id) REFERENCES Ward(id) ON DELETE CASCADE
+);
+
+-- Create Admission table
+CREATE TABLE Admission (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    patient_name VARCHAR(255) NOT NULL,
+    admission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    discharge_date TIMESTAMP NULL,
+    bed_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (bed_id) REFERENCES Bed(id) ON DELETE SET NULL
+);
